@@ -1,8 +1,9 @@
 from io import BytesIO
 import rsa
-from config import URL, USER, VERIFY, PWD
+from config import URL, USER, VERIFY, PWD, PROXY_NAME, PROXY_PORT
 import requests
 from lxml import etree
+from mitmproxy import http
 
 session = requests.Session()
 session.headers[
@@ -27,3 +28,11 @@ rsp = session.post(f"{URL}/por/login_psw.csp?anti_replay=1&encrypt=1&apiversion=
 }, verify=False)
 print(rsp.text)
 print(session.cookies)
+
+
+def request(flow: http.HTTPFlow):
+    req = flow.request
+    if PROXY_NAME not in req.host:
+        req.host = req.host.replace(".", "-") + "." + PROXY_NAME
+        req.port = PROXY_PORT
+        req.cookies.add("TWFID", session.cookies.get("TWFID"))
