@@ -5,6 +5,9 @@ import requests
 from lxml import etree
 
 session = requests.Session()
+session.headers[
+    "User-Agent"] = headers = "Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Mobile Safari/537.36 Edg/85.0.564.41"
+
 rsp = session.get(f"{URL}/por/login_auth.csp?apiversion=1", verify=VERIFY)
 xml = etree.parse(BytesIO(rsp.content))
 
